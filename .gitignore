@@ -1,0 +1,7 @@
+*.log
+*.tmp
+.cache/
+tmp/
+work/
+.claude/
+*.nightwire.bak

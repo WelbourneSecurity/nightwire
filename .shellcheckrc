@@ -1,0 +1,8 @@
+# Nightwire shellcheck configuration.
+
+# Allow `local var="$(cmd)"` — the established style across the codebase. The
+# masked-return-value risk does not apply to the simple commands used here.
+disable=SC2155
+
+# Follow `source lib/*.sh` so cross-file definitions are understood.
+external-sources=true
