@@ -64,6 +64,7 @@ ctf_install_packages() {
     return 0
   fi
 
+  ctf_info "Installing ${#available[@]} apt package(s)..."
   ctf_wait_for_apt_locks
   ctf_run_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "${available[@]}"
   INSTALLED_PACKAGE_GROUPS+=("${available[*]}")

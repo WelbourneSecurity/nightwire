@@ -1,5 +1,31 @@
 #!/usr/bin/env bash
 
+ctf_init_colors() {
+  if ((CTF_COLOR)); then
+    C_RESET=$'\e[0m'
+    C_BOLD=$'\e[1m'
+    C_DIM=$'\e[2m'
+    C_BLUE=$'\e[38;5;39m'
+    C_CYAN=$'\e[38;5;44m'
+    C_GREEN=$'\e[38;5;78m'
+    C_YELLOW=$'\e[38;5;220m'
+    C_RED=$'\e[38;5;203m'
+    C_GREY=$'\e[38;5;245m'
+    C_MAGENTA=$'\e[38;5;176m'
+  else
+    C_RESET=""
+    C_BOLD=""
+    C_DIM=""
+    C_BLUE=""
+    C_CYAN=""
+    C_GREEN=""
+    C_YELLOW=""
+    C_RED=""
+    C_GREY=""
+    C_MAGENTA=""
+  fi
+}
+
 ctf_setup_logging() {
   if [[ -z "$LOG_FILE" ]]; then
     LOG_FILE="${TMPDIR:-/tmp}/nightwire-$(date +%Y%m%d-%H%M%S).log"
@@ -13,31 +39,66 @@ ctf_setup_logging() {
     touch "$LOG_FILE"
   fi
 
-  exec > >(tee -a "$LOG_FILE") 2>&1
+  # Decide on color from the real stdout before it is redirected to the tee.
+  if [[ -t 1 && -z "${NO_COLOR:-}" && "${TERM:-dumb}" != "dumb" ]]; then
+    CTF_COLOR=1
+  else
+    CTF_COLOR=0
+  fi
+  ctf_init_colors
+
+  # Mirror everything to the terminal (colored) and an ANSI-stripped copy to the
+  # log file, so the log stays clean and greppable.
+  if command -v sed >/dev/null 2>&1; then
+    exec > >(tee >(sed -u 's/\x1b\[[0-9;]*m//g' >>"$LOG_FILE")) 2>&1
+  else
+    exec > >(tee -a "$LOG_FILE") 2>&1
+  fi
 }
 
 ctf_banner() {
+  printf '%s' "${C_CYAN}${C_BOLD}"
   cat <<'BANNER'
    ______ ______ ______   _    ____  ___
   / ____//_  __// ____/  | |  / /  |/  /
  / /      / /  / /_____  | | / / /|_/ /
 / /___   / /  / ____/ /  | |/ / /  / /
 \____/  /_/  /_/   /_/   |___/_/  /_/
-
-Nightwire Bootstrap
 BANNER
+  printf '%s%sNightwire Bootstrap%s\n\n' "$C_RESET" "$C_BOLD" "$C_RESET"
   ctf_info "Version: $NIGHTWIRE_VERSION"
   ctf_info "Log file: $LOG_FILE"
 }
 
 ctf_timestamp() {
-  date '+%Y-%m-%d %H:%M:%S'
+  date '+%H:%M:%S'
+}
+
+# A bold section header with a running step counter, e.g. "▶ Packages & tools (2/9)".
+ctf_section() {
+  local title="$1"
+  if ((CTF_SECTION_TOTAL > 0)); then
+    title="$title ${C_DIM}($CTF_SECTION_NUM/$CTF_SECTION_TOTAL)${C_RESET}${C_BOLD}${C_CYAN}"
+  fi
+  printf '\n%s%s▶ %s%s\n' "$C_BOLD" "$C_CYAN" "$title" "$C_RESET"
+}
+
+# Dim, indented echo of the commands being executed (recedes behind real status).
+ctf_trace() {
+  printf '%s  ↳ %s%s\n' "$C_DIM" "$*" "$C_RESET"
 }
 
 ctf_log() {
   local level="$1"
   shift
-  printf '[%s] [%s] %s\n' "$(ctf_timestamp)" "$level" "$*"
+  local sym color
+  case "$level" in
+    OK) sym="✓" color="$C_GREEN" ;;
+    WARN) sym="⚠" color="$C_YELLOW" ;;
+    ERROR) sym="✗" color="$C_RED" ;;
+    *) sym="•" color="$C_BLUE" ;;
+  esac
+  printf '%s%s%s %s%s%s %s\n' "$C_DIM" "$(ctf_timestamp)" "$C_RESET" "$color" "$sym" "$C_RESET" "$*"
 }
 
 ctf_info() {
@@ -63,7 +124,7 @@ ctf_die() {
 }
 
 ctf_run() {
-  ctf_info "+ $*"
+  ctf_trace "$*"
   if ((DRY_RUN)); then
     return 0
   fi
@@ -79,7 +140,7 @@ ctf_run_root() {
 }
 
 ctf_try_root() {
-  ctf_info "+ $*"
+  ctf_trace "$*"
   if ((DRY_RUN)); then
     return 0
   fi
@@ -93,7 +154,7 @@ ctf_try_root() {
 ctf_run_user_shell() {
   local command="$1"
   local user_path="$TARGET_HOME/.local/bin:$TARGET_HOME/.cargo/bin:$TARGET_HOME/go/bin:$PATH"
-  ctf_info "+ user:$TARGET_USER $command"
+  ctf_trace "user:$TARGET_USER $command"
   if ((DRY_RUN)); then
     return 0
   fi
@@ -110,7 +171,7 @@ ctf_run_user_shell() {
 ctf_try_user_shell() {
   local command="$1"
   local user_path="$TARGET_HOME/.local/bin:$TARGET_HOME/.cargo/bin:$TARGET_HOME/go/bin:$PATH"
-  ctf_info "+ user:$TARGET_USER $command"
+  ctf_trace "user:$TARGET_USER $command"
   if ((DRY_RUN)); then
     return 0
   fi

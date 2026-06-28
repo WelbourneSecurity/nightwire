@@ -383,6 +383,7 @@ ctf_dedupe_array() {
 ctf_install_profile() {
   ctf_info "Resolving package profile: $PROFILE"
   ctf_resolve_profile_packages "$PROFILE"
+  ctf_info "Profile $PROFILE: ${#PROFILE_PACKAGES[@]} apt, ${#PIPX_TOOLS[@]} pipx, ${#GO_TOOLS[@]} go, ${#CARGO_TOOLS[@]} cargo, ${#GEM_TOOLS[@]} gem tools"
   ctf_install_packages "${PROFILE_PACKAGES[@]}"
   ctf_install_pipx_tools
   ctf_install_cargo_tools

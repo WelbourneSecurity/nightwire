@@ -392,6 +392,30 @@ ctf_section_enabled() {
   return 0
 }
 
+ctf_count_sections() {
+  local section
+  CTF_SECTION_TOTAL=0
+  CTF_SECTION_NUM=0
+  for section in runtime packages assets command workspace browser labs vmware shell desktop validate; do
+    if ctf_section_enabled "$section"; then
+      CTF_SECTION_TOTAL=$((CTF_SECTION_TOTAL + 1))
+    fi
+  done
+}
+
+ctf_run_section() {
+  local name="$1"
+  local title="$2"
+  local fn="$3"
+  if ctf_section_enabled "$name"; then
+    CTF_SECTION_NUM=$((CTF_SECTION_NUM + 1))
+    ctf_section "$title"
+    "$fn"
+  else
+    ctf_info "Skipping section: $title"
+  fi
+}
+
 ctf_confirm_scope() {
   if ((YES)) || ((DRY_RUN)); then
     return 0

@@ -52,17 +52,18 @@ main() {
   ctf_confirm_scope
   ctf_preflight_checks
 
-  if ctf_section_enabled runtime; then ctf_setup_runtime; else ctf_info "Skipping section: runtime"; fi
-  if ctf_section_enabled packages; then ctf_install_profile; else ctf_info "Skipping section: packages"; fi
-  if ctf_section_enabled assets; then ctf_setup_assets; else ctf_info "Skipping section: assets"; fi
-  if ctf_section_enabled command; then ctf_install_command_framework; else ctf_info "Skipping section: command"; fi
-  if ctf_section_enabled workspace; then ctf_setup_workspace; else ctf_info "Skipping section: workspace"; fi
-  if ctf_section_enabled browser; then ctf_setup_browser_helpers; else ctf_info "Skipping section: browser"; fi
-  if ctf_section_enabled labs; then ctf_setup_labs; else ctf_info "Skipping section: labs"; fi
-  if ctf_section_enabled vmware; then ctf_setup_vmware; else ctf_info "Skipping section: vmware"; fi
-  if ctf_section_enabled shell; then ctf_setup_shells; else ctf_info "Skipping section: shell"; fi
-  if ctf_section_enabled desktop; then ctf_setup_desktop; else ctf_info "Skipping section: desktop"; fi
-  if ctf_section_enabled validate; then ctf_validate_install; else ctf_info "Skipping section: validate"; fi
+  ctf_count_sections
+  ctf_run_section runtime "Runtime managers" ctf_setup_runtime
+  ctf_run_section packages "Packages & tools" ctf_install_profile
+  ctf_run_section assets "Assets" ctf_setup_assets
+  ctf_run_section command "nightwire command" ctf_install_command_framework
+  ctf_run_section workspace "Workspace" ctf_setup_workspace
+  ctf_run_section browser "Browser helpers" ctf_setup_browser_helpers
+  ctf_run_section labs "Local labs" ctf_setup_labs
+  ctf_run_section vmware "VMware integration" ctf_setup_vmware
+  ctf_run_section shell "Shell & autocomplete" ctf_setup_shells
+  ctf_run_section desktop "Desktop / UI" ctf_setup_desktop
+  ctf_run_section validate "Validation" ctf_validate_install
   ctf_write_report
 
   ctf_success "Nightwire bootstrap complete. Review the report at $REPORT_FILE"

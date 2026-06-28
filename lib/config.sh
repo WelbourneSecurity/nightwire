@@ -23,6 +23,21 @@ ctf_init_defaults() {
   CACHE_DIR="${NIGHTWIRE_CACHE_DIR:-}"
   REMOTE_INSTALLERS=1
 
+  # Console presentation (populated by ctf_init_colors once color is decided).
+  CTF_COLOR=0
+  CTF_SECTION_NUM=0
+  CTF_SECTION_TOTAL=0
+  C_RESET=""
+  C_BOLD=""
+  C_DIM=""
+  C_BLUE=""
+  C_CYAN=""
+  C_GREEN=""
+  C_YELLOW=""
+  C_RED=""
+  C_GREY=""
+  C_MAGENTA=""
+
   SCRIPT_ROOT="${SCRIPT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
   MANIFEST_FILE="$SCRIPT_ROOT/manifests/tools.jsonl"
   ASSET_SOURCE_DIR="$SCRIPT_ROOT/assets"
