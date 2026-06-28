@@ -6,7 +6,7 @@ ctf_setup_browser_helpers() {
       ctf_info "Browser/proxy helper setup skipped."
       return 0
       ;;
-    basic|proxy)
+    basic | proxy)
       ctf_info "Installing browser/proxy helper assets."
       ;;
   esac

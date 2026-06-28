@@ -153,7 +153,7 @@ ctf_parse_args() {
         DRY_RUN=1
         shift
         ;;
-      --yes|-y)
+      --yes | -y)
         YES=1
         shift
         ;;
@@ -188,7 +188,7 @@ ctf_parse_args() {
         SKIP_SECTIONS="${1#*=}"
         shift
         ;;
-      -h|--help)
+      -h | --help)
         ctf_usage
         exit 0
         ;;
@@ -311,32 +311,32 @@ ctf_interactive_defaults() {
 
 ctf_validate_options() {
   case "$PROFILE" in
-    light|standard|full) ;;
+    light | standard | full) ;;
     *) ctf_die "Invalid --profile '$PROFILE'. Use light, standard, or full." ;;
   esac
 
   case "$SHELL_MODE" in
-    bash|zsh|both) ;;
+    bash | zsh | both) ;;
     *) ctf_die "Invalid --shell '$SHELL_MODE'. Use bash, zsh, or both." ;;
   esac
 
   case "$DESKTOP_MODE" in
-    auto|xfce|gnome|kde|mate|none) ;;
+    auto | xfce | gnome | kde | mate | none) ;;
     *) ctf_die "Invalid --desktop '$DESKTOP_MODE'. Use auto, xfce, gnome, kde, mate, or none." ;;
   esac
 
   case "$RUNTIME_MODE" in
-    system|mise|none) ;;
+    system | mise | none) ;;
     *) ctf_die "Invalid --runtime '$RUNTIME_MODE'. Use system, mise, or none." ;;
   esac
 
   case "$BROWSER_MODE" in
-    proxy|basic|none) ;;
+    proxy | basic | none) ;;
     *) ctf_die "Invalid --browser '$BROWSER_MODE'. Use proxy, basic, or none." ;;
   esac
 
   case "$LAB_MODE" in
-    local|all|none) ;;
+    local | all | none) ;;
     *) ctf_die "Invalid --labs '$LAB_MODE'. Use local, all, or none." ;;
   esac
 
@@ -354,7 +354,7 @@ ctf_validate_extra_profiles() {
   IFS=',' read -r -a _ctf_profiles <<<"$profiles"
   for profile in "${_ctf_profiles[@]}"; do
     case "$profile" in
-      web|pwn|rev|forensics|osint|wireless|bugbounty|cloud|ad|malware|all) ;;
+      web | pwn | rev | forensics | osint | wireless | bugbounty | cloud | ad | malware | all) ;;
       *) ctf_die "Invalid extra profile '$profile'. Use web, pwn, rev, forensics, osint, wireless, bugbounty, cloud, ad, malware, or all." ;;
     esac
   done
@@ -369,7 +369,7 @@ ctf_validate_sections() {
   IFS=',' read -r -a _ctf_sections <<<"$sections"
   for section in "${_ctf_sections[@]}"; do
     case "$section" in
-      runtime|packages|assets|command|workspace|browser|labs|vmware|shell|desktop|validate) ;;
+      runtime | packages | assets | command | workspace | browser | labs | vmware | shell | desktop | validate) ;;
       *) ctf_die "Invalid section '$section'. Use runtime, packages, assets, command, workspace, browser, labs, vmware, shell, desktop, or validate." ;;
     esac
   done
@@ -402,7 +402,7 @@ ctf_confirm_scope() {
     local answer
     read -r answer
     case "$answer" in
-      y|Y|yes|YES) ;;
+      y | Y | yes | YES) ;;
       *) ctf_die "Aborted before full profile install." ;;
     esac
   fi

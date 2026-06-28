@@ -223,7 +223,10 @@ default_wordlist() {
   )
   local w
   for w in "${candidates[@]}"; do
-    [[ -f "$w" ]] && { printf '%s' "$w"; return 0; }
+    [[ -f "$w" ]] && {
+      printf '%s' "$w"
+      return 0
+    }
   done
   return 1
 }
@@ -490,7 +493,7 @@ cmd_uninstall() {
     local answer
     read -r answer
     case "$answer" in
-      y|Y|yes|YES) ;;
+      y | Y | yes | YES) ;;
       *) die "uninstall aborted" ;;
     esac
   fi
@@ -866,7 +869,7 @@ main() {
     scan) cmd_scan "$@" ;;
     serve) cmd_serve "$@" ;;
     listen) cmd_listen "$@" ;;
-    -h|--help|help|"") usage ;;
+    -h | --help | help | "") usage ;;
     *) die "unknown command: $command" ;;
   esac
 }

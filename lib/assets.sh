@@ -13,7 +13,7 @@ ctf_setup_assets() {
 ctf_asset_url_mode() {
   local url="$1"
   case "$url" in
-    *.tar.gz|*.tgz) printf 'archive\n' ;;
+    *.tar.gz | *.tgz) printf 'archive\n' ;;
     *) printf 'base\n' ;;
   esac
 }

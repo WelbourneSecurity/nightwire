@@ -14,7 +14,7 @@ ctf_detect_platform() {
 
   case "$DISTRO_ID" in
     kali) DISTRO_FAMILY="kali" ;;
-    parrot|parrotos) DISTRO_FAMILY="parrot" ;;
+    parrot | parrotos) DISTRO_FAMILY="parrot" ;;
     ubuntu) DISTRO_FAMILY="ubuntu" ;;
     debian) DISTRO_FAMILY="debian" ;;
     *)
@@ -39,8 +39,8 @@ ctf_detect_desktop() {
 
   case "$desktop" in
     *xfce*) DETECTED_DESKTOP="xfce" ;;
-    *gnome*|*ubuntu*) DETECTED_DESKTOP="gnome" ;;
-    *kde*|*plasma*) DETECTED_DESKTOP="kde" ;;
+    *gnome* | *ubuntu*) DETECTED_DESKTOP="gnome" ;;
+    *kde* | *plasma*) DETECTED_DESKTOP="kde" ;;
     *mate*) DETECTED_DESKTOP="mate" ;;
     *)
       if pgrep -x xfce4-session >/dev/null 2>&1; then

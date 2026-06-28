@@ -619,7 +619,7 @@ ctf_maybe_set_login_shell() {
   local answer
   read -r answer
   case "$answer" in
-    y|Y|yes|YES)
+    y | Y | yes | YES)
       ctf_run_root chsh -s "$shell_path" "$TARGET_USER"
       LOGIN_SHELL_CHANGED=1
       ;;

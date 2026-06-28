@@ -6,7 +6,7 @@ ctf_setup_labs() {
       ctf_info "Local Docker lab asset setup skipped."
       return 0
       ;;
-    local|all)
+    local | all)
       ctf_info "Installing local-only vulnerable lab compose assets."
       ;;
   esac
