@@ -10,7 +10,7 @@ setup() {
 }
 
 @test "parses non-interactive flags" {
-  ctf_parse_args --profile light --extras web,pwn --shell zsh --desktop xfce --runtime mise --browser proxy --labs local --workspace-dir ~/nightwire-labs --assets-url https://example.com/assets.tar.gz --dry-run --yes --no-reboot --skip desktop --only runtime,packages,shell
+  ctf_parse_args --profile light --extras web,pwn --shell zsh --desktop xfce --runtime mise --browser proxy --labs local --workspace-dir '~/nightwire-labs' --assets-url https://example.com/assets.tar.gz --dry-run --yes --no-reboot --skip desktop --only runtime,packages,shell
   [ "$PROFILE" = "light" ]
   [ "$EXTRA_PROFILES" = "web,pwn" ]
   [ "$SHELL_MODE" = "zsh" ]
