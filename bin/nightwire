@@ -212,7 +212,7 @@ cmd_reconfigure() {
   local installer="$BASE_DIR/installer/install.sh"
   [[ -x "$installer" ]] || die "staged installer not found ($installer); re-run the original install.sh"
   printf 'Refreshing Nightwire shell/desktop config...\n'
-  sudo_if_needed "$installer" --only shell,desktop --yes "$@"
+  sudo_if_needed "$installer" --only shell,desktop --no-reboot --yes "$@"
 }
 
 default_wordlist() {

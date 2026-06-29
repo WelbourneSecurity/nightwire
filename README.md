@@ -2,7 +2,7 @@
 
 A modular Bash bootstrapper for Kali, Parrot, Ubuntu, and Debian CTF virtual machines, tuned for VMware guests.
 
-It installs profile-based tooling, configures a polished Bash/Zsh console with Exegol-style autocomplete (inline autosuggestions, fuzzy completion menus, and syntax highlighting), adds tmux and Starship defaults, installs VMware guest integration, applies translucent terminal/launcher visuals where supported, installs a `nightwire` helper command, prepares local-only Docker labs, and supports repo-hosted assets with checksum verification.
+It installs profile-based tooling, configures a polished Bash/Zsh console with Exegol-style autocomplete (inline autosuggestions, fuzzy completion menus, and syntax highlighting), adds tmux and Starship defaults, installs VMware guest integration, installs and themes the Blackbox terminal as the cyber-noir default (Ctrl+Alt+T), applies translucent launcher visuals where supported, installs a `nightwire` helper command, prepares local-only Docker labs, and supports repo-hosted assets with checksum verification.
 
 ## Autocomplete & Shell
 
@@ -115,6 +115,9 @@ The command helpers are for authorized CTF, lab, owned, or explicitly permitted 
 - `nightwire cache prepare` builds an offline bundle (assets + git mirrors + Nerd Font); `./install.sh --cache-dir DIR --no-remote-installers` then installs fully airgapped.
 - User config files (`.bashrc`, `.zshrc`, `.inputrc`, `.tmux.conf`) are backed up once with `.nightwire.bak` before managed blocks are added.
 - Desktop customization is best when run from inside the graphical session.
+- Installs the Blackbox GTK4 terminal, themes it with the cyber-noir palette and Nerd Font, registers it as the default `x-terminal-emulator`, and binds Ctrl+Alt+T to it. Falls back to a Flathub Flatpak only when `flatpak` is already present.
+- In the default `both` shell mode the login shell is set to Zsh (after confirmation, or automatically with `--yes`) so terminals open straight into the Oh My Zsh experience.
+- The installer reboots when it finishes — a 10s cancellable countdown — so kernel, desktop, group, and login-shell changes take effect. Pass `--no-reboot` to skip it; `nightwire reconfigure` never reboots.
 
 ## Validation
 

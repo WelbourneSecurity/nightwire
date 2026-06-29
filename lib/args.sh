@@ -20,7 +20,7 @@ Options:
   --no-remote-installers              Forbid curl|sh installers (starship fallback, mise); apt/git only.
   --dry-run                           Print actions without changing the system.
   --yes                               Use defaults and skip confirmations.
-  --no-reboot                         Do not suggest reboot at the end.
+  --no-reboot                         Do not reboot at the end.
   --log-file PATH                     Write detailed log to PATH.
   --only a,b,c                        Run only selected sections.
   --skip a,b,c                        Skip selected sections.

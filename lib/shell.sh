@@ -24,6 +24,8 @@ ctf_setup_shells() {
       ctf_configure_bash
       ctf_configure_zsh
       ctf_configure_tmux
+      # Default to the Zsh + Oh My Zsh experience so the new terminal lands in it.
+      ctf_maybe_set_login_shell zsh
       ;;
   esac
 }

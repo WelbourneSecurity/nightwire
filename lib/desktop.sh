@@ -8,6 +8,7 @@ ctf_setup_desktop() {
 
   ctf_info "Applying desktop customization for: $SELECTED_DESKTOP"
   ctf_install_packages alacritty rofi flameshot xclip xsel wl-clipboard papirus-icon-theme arc-theme fonts-firacode fonts-hack
+  ctf_install_blackbox
   ctf_configure_alacritty
   ctf_configure_rofi
 
@@ -17,6 +18,164 @@ ctf_setup_desktop() {
     kde) ctf_customize_kde ;;
     mate) ctf_customize_mate ;;
     *) ctf_warn "Unsupported desktop '$SELECTED_DESKTOP'; skipping visual customization." ;;
+  esac
+
+  ctf_setup_default_terminal
+}
+
+# Blackbox (com.raggesilver.BlackBox) is a slick GTK4 terminal. Prefer the apt
+# package; fall back to a Flathub Flatpak only when flatpak is already present and
+# remote installers are permitted. Best-effort: never aborts the bootstrap.
+ctf_install_blackbox() {
+  if command -v blackbox >/dev/null 2>&1; then
+    ctf_info "Blackbox terminal already installed."
+    return 0
+  fi
+
+  if ctf_package_available blackbox-terminal; then
+    ctf_install_packages blackbox-terminal
+    return 0
+  fi
+
+  if ((REMOTE_INSTALLERS)) && command -v flatpak >/dev/null 2>&1; then
+    ctf_warn "blackbox-terminal has no apt candidate; installing Blackbox from Flathub."
+    ctf_try_root flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ctf_try_root flatpak install -y flathub com.raggesilver.BlackBox
+    return 0
+  fi
+
+  ctf_warn "Blackbox terminal is unavailable here; leaving the existing default terminal in place."
+}
+
+# Echo the command that launches Blackbox (apt binary or Flatpak), or nothing
+# when it is not installed.
+ctf_blackbox_command() {
+  if command -v blackbox >/dev/null 2>&1; then
+    printf 'blackbox\n'
+  elif command -v flatpak >/dev/null 2>&1 && flatpak info com.raggesilver.BlackBox >/dev/null 2>&1; then
+    printf 'flatpak run com.raggesilver.BlackBox\n'
+  fi
+}
+
+# Theme Blackbox, make it the default terminal, and bind Ctrl+Alt+T to it.
+ctf_setup_default_terminal() {
+  local cmd
+  cmd="$(ctf_blackbox_command)"
+  if [[ -z "$cmd" ]]; then
+    ctf_warn "Blackbox not installed; leaving the default terminal and Ctrl+Alt+T unchanged."
+    return 0
+  fi
+
+  ctf_info "Setting Blackbox as the default terminal (Ctrl+Alt+T)."
+  ctf_configure_blackbox
+  ctf_set_default_terminal "$cmd"
+  ctf_bind_terminal_shortcut "$cmd"
+}
+
+# Install a cyber-noir color scheme and apply font/transparency/padding. The
+# gsettings block is a no-op unless the apt build's schema is installed (a
+# Flatpak keeps its settings in a sandboxed dconf), so the scheme file is written
+# for both layouts.
+ctf_configure_blackbox() {
+  local owner="$TARGET_USER:$(id -gn "$TARGET_USER")"
+  local scheme
+  read -r -d '' scheme <<'EOF' || true
+{
+  "name": "Nightwire",
+  "comment": "Nightwire cyber-noir",
+  "use-theme-colors": false,
+  "foreground-color": "#d8dee9",
+  "background-color": "#0b0f14",
+  "cursor-foreground-color": "#0b0f14",
+  "cursor-background-color": "#88c0d0",
+  "badge-color": "#88c0d0",
+  "bold-color": "#eceff4",
+  "highlight-foreground-color": "#0b0f14",
+  "highlight-background-color": "#88c0d0",
+  "palette": [
+    "#1b2229", "#bf616a", "#a3be8c", "#ebcb8b",
+    "#81a1c1", "#b48ead", "#88c0d0", "#e5e9f0",
+    "#4c566a", "#bf616a", "#a3be8c", "#ebcb8b",
+    "#81a1c1", "#b48ead", "#8fbcbb", "#eceff4"
+  ]
+}
+EOF
+
+  local dir
+  for dir in "$TARGET_HOME/.local/share/blackbox/schemes" "$TARGET_HOME/.var/app/com.raggesilver.BlackBox/data/blackbox/schemes"; do
+    ctf_run_root install -d -m 0755 -o "$TARGET_USER" -g "$(id -gn "$TARGET_USER")" "$dir"
+    ctf_write_root_file "$dir/nightwire.json" "$scheme" 0644 "$owner"
+  done
+
+  local command
+  read -r -d '' command <<'EOF' || true
+command -v gsettings >/dev/null 2>&1 || exit 0
+schema=com.raggesilver.BlackBox
+gsettings list-schemas 2>/dev/null | grep -qx "$schema" || exit 0
+gsettings set "$schema" theme-dark 'Nightwire' || true
+gsettings set "$schema" theme-light 'Nightwire' || true
+gsettings set "$schema" style-preference 'dark' || true
+gsettings set "$schema" font 'Hack Nerd Font 11' || true
+gsettings set "$schema" terminal-padding "(uint32 12, uint32 12, uint32 12, uint32 12)" || true
+gsettings set "$schema" opacity 92 || true
+gsettings set "$schema" show-headerbar false || true
+gsettings set "$schema" fill-tabs true || true
+gsettings set "$schema" floating-controls true || true
+gsettings set "$schema" terminal-bell false || true
+gsettings set "$schema" cursor-shape 'block' || true
+gsettings set "$schema" scrollback-lines 100000 || true
+gsettings set "$schema" command-as-login-shell true || true
+EOF
+  ctf_try_user_shell "$command"
+}
+
+# Register Blackbox as the system x-terminal-emulator and as GNOME's terminal.
+ctf_set_default_terminal() {
+  local cmd="$1"
+  local bin
+  bin="$(command -v blackbox 2>/dev/null || true)"
+
+  if [[ -n "$bin" ]] && command -v update-alternatives >/dev/null 2>&1; then
+    ctf_try_root update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$bin" 60
+    ctf_try_root update-alternatives --set x-terminal-emulator "$bin"
+  fi
+
+  ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.gnome.desktop.default-applications.terminal exec '$cmd' 2>/dev/null || true; gsettings set org.gnome.desktop.default-applications.terminal exec-arg '' 2>/dev/null || true; fi"
+}
+
+# Bind Ctrl+Alt+T to Blackbox. The mechanism is desktop-specific.
+ctf_bind_terminal_shortcut() {
+  local cmd="$1"
+  case "$SELECTED_DESKTOP" in
+    gnome)
+      local command
+      read -r -d '' command <<'EOF' || true
+command -v gsettings >/dev/null 2>&1 || exit 0
+base=org.gnome.settings-daemon.plugins.media-keys
+kbpath=/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/nightwire-blackbox/
+ckb="$base.custom-keybinding:$kbpath"
+cur="$(gsettings get $base custom-keybindings 2>/dev/null || echo '@as []')"
+case "$cur" in
+  *"$kbpath"*) : ;;
+  "@as []" | "[]") gsettings set $base custom-keybindings "['$kbpath']" || true ;;
+  *) gsettings set $base custom-keybindings "${cur%]}, '$kbpath']" || true ;;
+esac
+gsettings set "$ckb" name 'Blackbox' || true
+gsettings set "$ckb" command '__CMD__' || true
+gsettings set "$ckb" binding '<Primary><Alt>t' || true
+EOF
+      command="${command//__CMD__/$cmd}"
+      ctf_try_user_shell "$command"
+      ;;
+    xfce)
+      ctf_try_user_shell "if command -v xfconf-query >/dev/null 2>&1; then xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>t' -r 2>/dev/null || true; xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>t' -n -t string -s '$cmd' || true; fi"
+      ;;
+    mate)
+      ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.mate.applications-terminal exec '$cmd' 2>/dev/null || true; gsettings set org.mate.Marco.global-keybindings run-command-terminal '<Primary><Alt>t' 2>/dev/null || true; fi"
+      ;;
+    kde)
+      ctf_warn "On KDE, bind Ctrl+Alt+T to '$cmd' via System Settings > Shortcuts (no stable scripted path)."
+      ;;
   esac
 }
 

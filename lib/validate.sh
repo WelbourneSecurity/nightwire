@@ -140,6 +140,6 @@ EOF
 
   ctf_write_root_file "$REPORT_FILE" "$report" 0644 root:root
   if ! ((NO_REBOOT)); then
-    ctf_info "A reboot is recommended after VMware tools, kernel-adjacent tools, or shell/group changes."
+    ctf_info "A reboot runs at the end to apply kernel, desktop, group, and shell changes."
   fi
 }

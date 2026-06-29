@@ -70,6 +70,7 @@ main() {
   ctf_write_report
 
   ctf_success "Nightwire bootstrap complete. Review the report at $REPORT_FILE"
+  ctf_finish_reboot
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then

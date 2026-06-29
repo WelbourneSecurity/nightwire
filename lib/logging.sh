@@ -193,6 +193,38 @@ ctf_try_user_shell() {
   fi
 }
 
+# Reboot at the end so kernel/group/desktop/login-shell changes take effect.
+# Honors --dry-run and --no-reboot, and gives a short, cancellable countdown.
+ctf_finish_reboot() {
+  if ((DRY_RUN)); then
+    ctf_info "Dry run: skipping the final reboot."
+    return 0
+  fi
+  if ((NO_REBOOT)); then
+    ctf_info "Reboot skipped (--no-reboot). Reboot manually to apply all changes."
+    return 0
+  fi
+  if ! command -v systemctl >/dev/null 2>&1 && ! command -v reboot >/dev/null 2>&1; then
+    ctf_warn "No reboot command available; reboot manually to apply all changes."
+    return 0
+  fi
+
+  local secs=10
+  ctf_warn "Rebooting in ${secs}s to apply all changes. Press Ctrl-C to cancel."
+  while ((secs > 0)); do
+    printf '\r  rebooting in %2ds... ' "$secs"
+    sleep 1
+    secs=$((secs - 1))
+  done
+  printf '\n'
+
+  if command -v systemctl >/dev/null 2>&1; then
+    ctf_run_root systemctl reboot
+  else
+    ctf_run_root reboot
+  fi
+}
+
 ctf_backup_file_once() {
   local path="$1"
   if [[ -e "$path" && ! -e "$path.nightwire.bak" ]]; then
