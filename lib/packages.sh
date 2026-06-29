@@ -5,32 +5,32 @@ LIGHT_PACKAGES=(
   build-essential make cmake pkg-config gcc g++ file binutils patchelf strace ltrace
   python3 python3-pip python3-venv pipx ruby perl default-jdk
   tmux zsh vim neovim nano less man-db unzip zip p7zip-full xz-utils bzip2 tar gzip
-  jq yq fzf ripgrep fd-find bat tree htop btop zoxide eza tldr
+  jq yq fzf ripgrep fd-find bat tree htop btop zoxide eza tealdeer
   net-tools iproute2 iputils-ping dnsutils whois traceroute tcpdump nmap masscan openvpn
-  netcat-openbsd socat openssh-client rsync smbclient ftp tftp sqlite3 postgresql-client redis-tools rlwrap
-  docker.io docker-compose-plugin docker-compose
+  netcat-openbsd socat openssh-client rsync smbclient ftp tftp-hpa sqlite3 postgresql-client redis-tools rlwrap
+  docker.io docker-compose
   alacritty rofi flameshot xclip xsel wl-clipboard dconf-cli dbus-x11 libnss3-tools
-  fonts-firacode fonts-hack-ttf papirus-icon-theme arc-theme
+  fonts-firacode fonts-hack papirus-icon-theme arc-theme
 )
 
 STANDARD_PACKAGES=(
   seclists wordlists exploitdb
-  sqlmap nikto whatweb wafw00f gobuster ffuf feroxbuster rustscan dirb wfuzz
+  sqlmap nikto whatweb wafw00f gobuster ffuf feroxbuster dirb wfuzz
   hydra john hashcat hashid hashcat-utils crunch cewl
   enum4linux enum4linux-ng smbmap snmp onesixtyone responder impacket-scripts python3-impacket amass
   bloodhound neo4j ldap-utils krb5-user
-  gdb gdbserver gdb-multiarch radare2 rizin ghidra cutter nasm yasm gcc-multilib g++-multilib
-  libc6-i386 qemu-user qemu-user-static python3-pwntools ropgadget ropper checksec
-  binwalk foremost libimage-exiftool-perl steghide outguess pngcheck
-  ffmpeg imagemagick exiv2 sleuthkit testdisk volatility volatility3 bulk-extractor scalpel yara
+  gdb gdbserver gdb-multiarch radare2 rizin ghidra nasm yasm gcc-multilib g++-multilib
+  libc6-i386 qemu-user qemu-user-static python3-pwntools ropper checksec
+  binwalk foremost libimage-exiftool-perl steghide pngcheck
+  ffmpeg imagemagick exiv2 sleuthkit testdisk bulk-extractor scalpel yara
   tor proxychains4 torsocks
-  burpsuite zaproxy firefox-esr chromium chromium-browser
+  burpsuite zaproxy firefox-esr chromium
   golang-go rustc cargo ruby-full ruby-dev ruby-bundler ruby-rubygems
   libssl-dev libpcap-dev libcurl4-openssl-dev zlib1g-dev libxml2-dev libxslt1-dev
   nodejs npm
   wireshark tshark tcpflow
   wpscan
-  chisel ligolo-ng sshuttle peass-ng
+  chisel ligolo-ng sshuttle
 )
 
 WEB_PACKAGES=(
@@ -53,8 +53,12 @@ REV_PIPX_TOOLS=(
 )
 
 FORENSICS_PACKAGES=(
-  autopsy sleuthkit testdisk foremost scalpel bulk-extractor volatility volatility3
+  autopsy sleuthkit testdisk foremost scalpel bulk-extractor
   plaso-tools yara libimage-exiftool-perl pngcheck steghide
+)
+
+FORENSICS_PIPX_TOOLS=(
+  volatility3
 )
 
 OSINT_PACKAGES=(
@@ -79,8 +83,8 @@ AD_PACKAGES=(
 )
 
 MALWARE_PACKAGES=(
-  yara clamav clamav-daemon inetsim radare2 rizin ghidra cutter binwalk
-  libimage-exiftool-perl oletools python3-pefile python3-yara volatility3
+  yara clamav clamav-daemon inetsim radare2 rizin ghidra binwalk
+  libimage-exiftool-perl oletools python3-pefile python3-yara
 )
 
 KALI_FULL_METAPACKAGES=(
@@ -199,6 +203,7 @@ MALWARE_PIPX_TOOLS=(
   flare-floss
   vivisect
   malduck
+  volatility3
 )
 
 MALWARE_GO_TOOLS=(
@@ -317,6 +322,7 @@ ctf_apply_one_extra_profile() {
       ;;
     forensics)
       PROFILE_PACKAGES+=("${FORENSICS_PACKAGES[@]}")
+      PIPX_TOOLS+=("${FORENSICS_PIPX_TOOLS[@]}")
       ;;
     osint)
       PROFILE_PACKAGES+=("${OSINT_PACKAGES[@]}")

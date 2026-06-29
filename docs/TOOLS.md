@@ -11,7 +11,6 @@ Tools are pulled from apt where available and otherwise from pipx / Go / Cargo.
 
 | Tool | What | Channel |
 | --- | --- | --- |
-| peass-ng (linpeas/winpeas) | Privilege-escalation enumeration | apt (Kali) |
 | pspy | Watch processes/cron without root | Go |
 | chisel | TCP/UDP tunneling & port-forwarding | apt (Kali) |
 | ligolo-ng | Modern subnet-routing pivot | apt (Kali) |
@@ -61,8 +60,12 @@ distro/version specific. Install it manually or via Flatpak if you want it.
 
 ## Notes
 
-- Several apt names above are Kali-specific (`peass-ng`, `chisel`, `ligolo-ng`,
-  `jwt-tool`, `sliver`). On Debian/Ubuntu they are simply skipped.
+- Several apt names above are Kali-specific (`chisel`, `ligolo-ng`, `jwt-tool`,
+  `sliver`). On Debian/Ubuntu they are simply skipped.
+- `peass-ng` (linpeas/winpeas) is not packaged on Kali; grab the scripts/binaries
+  from the [PEASS-ng releases](https://github.com/peass-ng/PEASS-ng/releases)
+  when you need them.
+- `tldr` is provided by the `tealdeer` package on Kali (the binary is `tldr`).
 - Add a category with `--extras`, e.g. `./install.sh --profile standard --extras web,ad`.
 - `nightwire doctor` reports the core tools; `nightwire update` refreshes the
   pipx/Go/Cargo/gem tools and zsh plugins.

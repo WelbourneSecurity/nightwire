@@ -64,7 +64,7 @@ ctf_user_clone() {
 }
 
 ctf_install_terminal_fonts() {
-  ctf_install_packages fonts-firacode fonts-hack-ttf
+  ctf_install_packages fonts-firacode fonts-hack
   ctf_install_nerd_font
 }
 

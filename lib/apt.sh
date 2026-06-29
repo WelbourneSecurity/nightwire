@@ -36,7 +36,12 @@ ctf_apt_update_once() {
 
 ctf_package_available() {
   local package="$1"
-  apt-cache show "$package" >/dev/null 2>&1
+  # apt-cache show succeeds for transitional/virtual packages that have no
+  # installation candidate, which then break `apt-get install`. Require a real
+  # candidate via apt-cache policy instead.
+  local candidate
+  candidate="$(apt-cache policy "$package" 2>/dev/null | awk -F': ' '/^[[:space:]]*Candidate:/ {print $2; exit}')"
+  [[ -n "$candidate" && "$candidate" != "(none)" ]]
 }
 
 ctf_install_packages() {
@@ -66,8 +71,24 @@ ctf_install_packages() {
 
   ctf_info "Installing ${#available[@]} apt package(s)..."
   ctf_wait_for_apt_locks
-  ctf_run_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "${available[@]}"
-  INSTALLED_PACKAGE_GROUPS+=("${available[*]}")
+  # Try the batch first; if it fails, retry one-by-one so a single bad package
+  # cannot abort the whole bootstrap. (Inside `if`, the ERR trap is suppressed.)
+  if ctf_run_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "${available[@]}"; then
+    INSTALLED_PACKAGE_GROUPS+=("${available[*]}")
+    return 0
+  fi
+
+  ctf_warn "Batch install failed; retrying packages individually."
+  local pkg
+  for pkg in "${available[@]}"; do
+    ctf_wait_for_apt_locks
+    if ctf_run_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "$pkg"; then
+      INSTALLED_PACKAGE_GROUPS+=("$pkg")
+    else
+      ctf_warn "Failed to install apt package: $pkg"
+      SKIPPED_PACKAGES+=("$pkg")
+    fi
+  done
 }
 
 ctf_enable_service_if_present() {

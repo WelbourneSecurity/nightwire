@@ -104,7 +104,7 @@ The command helpers are for authorized CTF, lab, owned, or explicitly permitted 
 - Every apt package is checked with `apt-cache show` before install.
 - Standard/full profiles prefer apt packages, then add user-level Cargo, Go, Ruby Gem, and pipx tools for modern CTF utilities such as RustScan, feroxbuster, ProjectDiscovery tooling, and WPScan.
 - Extra profiles let you add focused web, pwn, reversing, forensics, OSINT, wireless, bug bounty, and cloud tooling without making every VM identical.
-- Ships modern, actively maintained tooling on top of the distro metapackages — privesc/pivoting (pspy, peass-ng, chisel, ligolo-ng, pwncat-cs), recon (gowitness, puredns, x8, kiterunner), and modern AD (bloodyAD, Coercer, ldeep). See [docs/TOOLS.md](docs/TOOLS.md).
+- Ships modern, actively maintained tooling on top of the distro metapackages — privesc/pivoting (pspy, chisel, ligolo-ng, pwncat-cs, sshuttle), recon (gowitness, puredns, x8, kiterunner), and modern AD (bloodyAD, Coercer, ldeep). See [docs/TOOLS.md](docs/TOOLS.md).
 - `--runtime mise` installs a user-level runtime manager for newer Go/Rust/Node/Ruby toolchains when distro packages lag.
 - Shell autocomplete plugins prefer apt packages and fall back to git clones; every plugin load is guarded so the managed block is safe on images (Kali/Parrot) that already configure some of them.
 - Oh My Zsh is cloned at a pinned ref rather than executed via `curl | sh`; the Nerd Font download is version-pinned, integrity-checked, and optionally checksum-verified (`NERD_FONT_SHA256`). `--no-remote-installers` forbids the remaining `curl | sh` fallbacks (Starship, mise).

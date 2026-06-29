@@ -15,7 +15,6 @@ setup() {
   ctf_resolve_profile_packages standard
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq git
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq sqlmap
-  printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq rustscan
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq cargo
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq golang-go
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq ruby-dev
@@ -30,7 +29,6 @@ setup() {
   ctf_resolve_profile_packages standard
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq chisel
   printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq sshuttle
-  printf '%s\n' "${PROFILE_PACKAGES[@]}" | grep -Fxq peass-ng
   printf '%s\n' "${PIPX_TOOLS[@]}" | grep -Fxq pwncat-cs
   printf '%s\n' "${GO_TOOLS[@]}" | grep -Fxq 'pspy|github.com/DominicBreuker/pspy@latest'
 }

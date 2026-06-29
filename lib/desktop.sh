@@ -7,7 +7,7 @@ ctf_setup_desktop() {
   fi
 
   ctf_info "Applying desktop customization for: $SELECTED_DESKTOP"
-  ctf_install_packages alacritty rofi flameshot xclip xsel wl-clipboard papirus-icon-theme arc-theme fonts-firacode fonts-hack-ttf
+  ctf_install_packages alacritty rofi flameshot xclip xsel wl-clipboard papirus-icon-theme arc-theme fonts-firacode fonts-hack
   ctf_configure_alacritty
   ctf_configure_rofi
 

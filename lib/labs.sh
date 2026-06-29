@@ -11,7 +11,7 @@ ctf_setup_labs() {
       ;;
   esac
 
-  ctf_install_packages docker.io docker-compose-plugin docker-compose
+  ctf_install_packages docker.io docker-compose
   ctf_run_root install -d -m 0755 "$ASSET_INSTALL_DIR/labs"
   ctf_install_resource_dir "$SCRIPT_ROOT/labs" "$ASSET_INSTALL_DIR/labs"
 }
