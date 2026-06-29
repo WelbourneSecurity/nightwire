@@ -96,7 +96,7 @@ ctf_download_asset_manifest() {
 }
 
 ctf_default_wallpaper_path() {
-  local wallpaper="$ASSET_INSTALL_DIR/wallpapers/nightwire-noir.svg"
+  local wallpaper="$ASSET_INSTALL_DIR/wallpapers/nightwire.png"
   if [[ -f "$wallpaper" ]]; then
     printf '%s\n' "$wallpaper"
     return 0

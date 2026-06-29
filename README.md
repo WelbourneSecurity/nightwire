@@ -117,14 +117,8 @@ The command helpers are for authorized CTF, lab, owned, or explicitly permitted 
 
 ## Validation
 
-On a Linux development machine:
-
-```bash
-make lint
-make test
-```
-
-Manual VM test matrix:
+Preview a run without changing the system, then exercise the profiles on a
+throwaway VM:
 
 ```bash
 ./install.sh --dry-run
