@@ -96,8 +96,9 @@ ctf_download_asset_manifest() {
 }
 
 ctf_default_wallpaper_path() {
+  # A user-supplied raster wallpaper wins; the bundled vector art is the fallback.
   local candidate
-  for candidate in nightwire-noir.svg ctf-grid.svg; do
+  for candidate in nightwire.png nightwire.jpg nightwire.jpeg nightwire-noir.svg ctf-grid.svg; do
     if [[ -f "$ASSET_INSTALL_DIR/wallpapers/$candidate" ]]; then
       printf '%s\n' "$ASSET_INSTALL_DIR/wallpapers/$candidate"
       return 0

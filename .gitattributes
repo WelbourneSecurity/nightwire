@@ -5,4 +5,6 @@
 *.bats text eol=lf
 bin/nightwire text eol=lf
 *.png binary
+*.jpg binary
+*.jpeg binary
 *.zip binary
