@@ -24,6 +24,8 @@ chmod +x install.sh
 ./install.sh
 ```
 
+Run with **no flags** for a guided whiptail wizard (profile, toolkits, shell, desktop) themed to match the cyber-noir palette. Pass flags or `--yes` to skip it and run non-interactively. The run shows colorized, sectioned output with per-section progress bars.
+
 Non-interactive standard install:
 
 ```bash

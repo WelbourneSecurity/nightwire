@@ -6,7 +6,7 @@ ctf_init_defaults() {
   PROFILE=""
   EXTRA_PROFILES=""
   SHELL_MODE=""
-  DESKTOP_MODE="auto"
+  DESKTOP_MODE=""
   RUNTIME_MODE="system"
   BROWSER_MODE="proxy"
   LAB_MODE="local"
@@ -65,6 +65,7 @@ ctf_init_defaults() {
   DOCKER_GROUP_CHANGED=0
   LOGIN_SHELL_CHANGED=0
   MISE_INSTALLED=0
+  DESKTOP_SWITCHED=0
 
   PROFILE_PACKAGES=()
   SKIPPED_PACKAGES=()

@@ -25,3 +25,14 @@ DESKTOP="$BATS_TEST_DIRNAME/../lib/desktop.sh"
 @test "desktop library is valid bash" {
   bash -n "$DESKTOP"
 }
+
+@test "can install and switch to GNOME, sets the noir wallpaper" {
+  grep -q "ctf_ensure_gnome" "$DESKTOP"
+  grep -q "kali-desktop-gnome" "$DESKTOP"
+  grep -q "nightwire-noir.svg" "$BATS_TEST_DIRNAME/../lib/assets.sh"
+}
+
+@test "cyber-noir wallpaper is bundled and checksummed" {
+  [ -f "$BATS_TEST_DIRNAME/../assets/wallpapers/nightwire-noir.svg" ]
+  grep -q "wallpapers/nightwire-noir.svg" "$BATS_TEST_DIRNAME/../assets/manifest.sha256"
+}

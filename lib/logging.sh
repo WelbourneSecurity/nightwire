@@ -74,13 +74,21 @@ ctf_timestamp() {
   date '+%H:%M:%S'
 }
 
-# A bold section header with a running step counter, e.g. "▶ Packages & tools (2/9)".
+# A bold section header with an inline progress bar, e.g.
+# "▶ Packages & tools  [████████░░░░░░░░] 2/11".
 ctf_section() {
   local title="$1"
+  local bar=""
   if ((CTF_SECTION_TOTAL > 0)); then
-    title="$title ${C_DIM}($CTF_SECTION_NUM/$CTF_SECTION_TOTAL)${C_RESET}${C_BOLD}${C_CYAN}"
+    local width=16 filled i
+    filled=$((CTF_SECTION_NUM * width / CTF_SECTION_TOTAL))
+    bar="["
+    for ((i = 0; i < width; i++)); do
+      if ((i < filled)); then bar+="█"; else bar+="░"; fi
+    done
+    bar+="] $CTF_SECTION_NUM/$CTF_SECTION_TOTAL"
   fi
-  printf '\n%s%s▶ %s%s\n' "$C_BOLD" "$C_CYAN" "$title" "$C_RESET"
+  printf '\n%s%s▶ %s%s  %s%s%s\n' "$C_BOLD" "$C_CYAN" "$title" "$C_RESET" "$C_DIM" "$bar" "$C_RESET"
 }
 
 # Dim, indented echo of the commands being executed (recedes behind real status).

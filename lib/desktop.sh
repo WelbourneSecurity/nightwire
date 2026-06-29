@@ -101,10 +101,32 @@ EOF
   ctf_append_marker_block_root "$terminalrc" "xfce-terminal" "$block" "$owner"
 }
 
+# Install GNOME and make it the default session when the box is not already on
+# GNOME (e.g. a fresh Xfce Kali). On an existing GNOME spin this is a no-op.
+ctf_ensure_gnome() {
+  if command -v gnome-shell >/dev/null 2>&1 || [[ "$DETECTED_DESKTOP" == "gnome" ]]; then
+    ctf_info "GNOME is already present; theming the existing session."
+    return 0
+  fi
+
+  ctf_warn "GNOME not detected; installing kali-desktop-gnome + gdm3 (large download)."
+  ctf_install_packages kali-desktop-gnome gdm3
+
+  if command -v systemctl >/dev/null 2>&1; then
+    ctf_try_root sh -c 'echo "gdm3 shared/default-x-display-manager select gdm3" | debconf-set-selections'
+    ctf_run_root sh -c 'echo /usr/sbin/gdm3 >/etc/X11/default-display-manager'
+    ctf_try_root systemctl enable gdm3
+    ctf_try_root systemctl set-default graphical.target
+    DESKTOP_SWITCHED=1
+    ctf_warn "Display manager switched to GDM3; reboot to land in GNOME."
+  fi
+}
+
 ctf_customize_gnome() {
   local wallpaper
   wallpaper="$(ctf_wallpaper_or_empty)"
 
+  ctf_ensure_gnome
   ctf_install_packages gnome-terminal
   ctf_install_nordic_theme
   ctf_configure_gnome_terminal
@@ -357,7 +379,7 @@ if command -v gsettings >/dev/null 2>&1; then
     gsettings set "$profile" use-system-font false || true
     if gsettings writable "$profile" use-transparent-background 2>/dev/null | grep -Fxq true; then
       gsettings set "$profile" use-transparent-background true || true
-      gsettings set "$profile" background-transparency-percent 14 || true
+      gsettings set "$profile" background-transparency-percent 22 || true
     fi
   fi
 fi

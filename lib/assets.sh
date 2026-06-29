@@ -96,10 +96,12 @@ ctf_download_asset_manifest() {
 }
 
 ctf_default_wallpaper_path() {
-  local wallpaper="$ASSET_INSTALL_DIR/wallpapers/ctf-grid.svg"
-  if [[ -f "$wallpaper" ]]; then
-    printf '%s\n' "$wallpaper"
-    return 0
-  fi
+  local candidate
+  for candidate in nightwire-noir.svg ctf-grid.svg; do
+    if [[ -f "$ASSET_INSTALL_DIR/wallpapers/$candidate" ]]; then
+      printf '%s\n' "$ASSET_INSTALL_DIR/wallpapers/$candidate"
+      return 0
+    fi
+  done
   return 1
 }

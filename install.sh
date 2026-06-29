@@ -9,6 +9,8 @@ source "$SCRIPT_DIR/lib/config.sh"
 source "$SCRIPT_DIR/lib/logging.sh"
 # shellcheck source=lib/args.sh
 source "$SCRIPT_DIR/lib/args.sh"
+# shellcheck source=lib/tui.sh
+source "$SCRIPT_DIR/lib/tui.sh"
 # shellcheck source=lib/detect.sh
 source "$SCRIPT_DIR/lib/detect.sh"
 # shellcheck source=lib/apt.sh
@@ -39,6 +41,7 @@ source "$SCRIPT_DIR/lib/validate.sh"
 main() {
   ctf_init_defaults
   ctf_parse_args "$@"
+  ctf_tui_configure
   ctf_setup_logging
   trap 'ctf_error "Bootstrap failed near line $LINENO. See $LOG_FILE for details."' ERR
 

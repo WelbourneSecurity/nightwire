@@ -1,8 +1,28 @@
 # UI Customization
 
-The installer applies a dark translucent workstation look where the detected desktop supports it.
+The installer applies a dark translucent **cyber-noir** workstation look where the detected desktop supports it.
 
 For the interactive shell experience (Exegol-style autocomplete, autosuggestions, syntax highlighting, fzf, Starship), see [SHELL.md](SHELL.md).
+
+## Install wizard
+
+Running `./install.sh` with no flags launches a whiptail wizard (cyber-noir
+palette) for the profile, extra toolkits, shell, and desktop. The install itself
+prints colorized, sectioned output with a per-section progress bar. `--yes` or any
+selection flag skips the wizard.
+
+## Wallpaper
+
+A bundled cyber-noir wallpaper (`assets/wallpapers/nightwire-noir.svg`) is
+installed and set as the desktop background. It is checksum-verified via the
+asset manifest. The older `ctf-grid.svg` remains as a fallback.
+
+## GNOME
+
+`--desktop gnome` (or choosing GNOME in the wizard) themes GNOME and, on a box
+that is **not** already running GNOME (e.g. a fresh Xfce Kali), installs
+`kali-desktop-gnome` + `gdm3` and makes GDM3 the default display manager. Reboot
+to land in the themed GNOME session.
 
 ## Terminal
 

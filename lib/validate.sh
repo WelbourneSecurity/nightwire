@@ -22,6 +22,10 @@ ctf_validate_install() {
     VALIDATION_WARNINGS+=("Login shell was changed; start a new login session to use it.")
   fi
 
+  if ((DESKTOP_SWITCHED)); then
+    VALIDATION_WARNINGS+=("Desktop switched to GNOME with GDM3; reboot to land in the GNOME session.")
+  fi
+
   if ctf_section_enabled shell; then
     if [[ "$SHELL_MODE" == "zsh" || "$SHELL_MODE" == "both" ]]; then
       if [[ ! -e /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh && ! -d "$TARGET_HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]]; then
