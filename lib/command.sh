@@ -22,7 +22,6 @@ ctf_install_command_framework() {
     ctf_install_resource_dir "$SCRIPT_ROOT/lib" "$ASSET_INSTALL_DIR/installer/lib"
   fi
 
-  ctf_install_resource_dir "$SCRIPT_ROOT/tool-lists" "$ASSET_INSTALL_DIR/tool-lists"
   ctf_install_resource_dir "$SCRIPT_ROOT/assets" "$ASSET_INSTALL_DIR/assets"
   ctf_install_resource_dir "$SCRIPT_ROOT/templates" "$ASSET_INSTALL_DIR/templates"
   ctf_install_resource_dir "$SCRIPT_ROOT/labs" "$ASSET_INSTALL_DIR/labs"

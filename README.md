@@ -13,12 +13,13 @@ Both shells get a modern, Exegol-like interactive experience out of the box:
 - **Both** — `fzf` history/file/dir pickers (`Ctrl-R`, `Ctrl-T`, `Alt-C`), `zoxide` smart `cd`, `eza` icon listings, a **Nerd Font** Starship prompt with a live VPN indicator, and `fd`/`bat` shims.
 - **tmux** — truecolor, vi copy-mode, and tpm + resurrect/continuum so sessions survive reboots and snapshots.
 
-See [docs/SHELL.md](docs/SHELL.md) for the full breakdown and key bindings. Verify it with `nightwire doctor`.
+Verify it with `nightwire doctor`.
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/WelbourneSecurity/nightwire.git
+# --depth 1 keeps the download tiny on a low-bandwidth VM.
+git clone --depth 1 https://github.com/WelbourneSecurity/nightwire.git
 cd nightwire
 chmod +x install.sh
 ./install.sh
@@ -95,7 +96,7 @@ nightwire snapshot-note pre-lab
 
 `vpn`/`target`/`ip` give you live CTF context: the `tun0` VPN address and pinned
 target show up in the tmux status bar and Starship prompt, and a context banner
-greets you on login. See [docs/COMMANDS.md](docs/COMMANDS.md).
+greets you on login.
 
 The command helpers are for authorized CTF, lab, owned, or explicitly permitted systems only.
 
@@ -106,26 +107,19 @@ The command helpers are for authorized CTF, lab, owned, or explicitly permitted 
 - Every apt package is checked with `apt-cache show` before install.
 - Standard/full profiles prefer apt packages, then add user-level Cargo, Go, Ruby Gem, and pipx tools for modern CTF utilities such as RustScan, feroxbuster, ProjectDiscovery tooling, and WPScan.
 - Extra profiles let you add focused web, pwn, reversing, forensics, OSINT, wireless, bug bounty, and cloud tooling without making every VM identical.
-- Ships modern, actively maintained tooling on top of the distro metapackages — privesc/pivoting (pspy, chisel, ligolo-ng, pwncat-cs, sshuttle), recon (gowitness, puredns, x8, kiterunner), and modern AD (bloodyAD, Coercer, ldeep). See [docs/TOOLS.md](docs/TOOLS.md).
+- Ships modern, actively maintained tooling on top of the distro metapackages — privesc/pivoting (pspy, chisel, ligolo-ng, pwncat-cs, sshuttle), recon (gowitness, puredns, x8, kiterunner), and modern AD (bloodyAD, Coercer, ldeep).
 - `--runtime mise` installs a user-level runtime manager for newer Go/Rust/Node/Ruby toolchains when distro packages lag.
 - Shell autocomplete plugins prefer apt packages and fall back to git clones; every plugin load is guarded so the managed block is safe on images (Kali/Parrot) that already configure some of them.
 - Oh My Zsh is cloned at a pinned ref rather than executed via `curl | sh`; the Nerd Font download is version-pinned, integrity-checked, and optionally checksum-verified (`NERD_FONT_SHA256`). `--no-remote-installers` forbids the remaining `curl | sh` fallbacks (Starship, mise).
 - Managed config blocks (`.bashrc`, `.zshrc`, `.inputrc`, `.tmux.conf`) are content-hashed, so re-running the installer — or `nightwire reconfigure` — refreshes them in place only when they changed, without disturbing your own edits.
 - `nightwire cache prepare` builds an offline bundle (assets + git mirrors + Nerd Font); `./install.sh --cache-dir DIR --no-remote-installers` then installs fully airgapped.
-- CI lints, runs the bats suite, and executes a `--dry-run` smoke test so arg-parsing/detection regressions are caught automatically.
 - User config files (`.bashrc`, `.zshrc`, `.inputrc`, `.tmux.conf`) are backed up once with `.nightwire.bak` before managed blocks are added.
 - Desktop customization is best when run from inside the graphical session.
 
 ## Validation
 
-On a Linux development machine:
-
-```bash
-make lint
-make test
-```
-
-Manual VM test matrix:
+Preview a run without changing the system, then exercise the profiles on a
+throwaway VM:
 
 ```bash
 ./install.sh --dry-run

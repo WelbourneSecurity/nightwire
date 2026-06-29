@@ -2,7 +2,6 @@
 # platform they were authored on. Shell scripts must never get CRLF.
 * text=auto eol=lf
 *.sh text eol=lf
-*.bats text eol=lf
 bin/nightwire text eol=lf
 *.png binary
 *.jpg binary
