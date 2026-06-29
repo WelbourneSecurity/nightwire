@@ -18,7 +18,8 @@ Verify it with `nightwire doctor`.
 ## Quick Start
 
 ```bash
-git clone https://github.com/WelbourneSecurity/nightwire.git
+# --depth 1 keeps the download tiny on a low-bandwidth VM.
+git clone --depth 1 https://github.com/WelbourneSecurity/nightwire.git
 cd nightwire
 chmod +x install.sh
 ./install.sh
