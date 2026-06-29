@@ -56,7 +56,9 @@ ctf_customize_xfce() {
   ctf_configure_xfce_terminal
 
   if [[ -n "$wallpaper" ]]; then
-    ctf_try_user_shell "if command -v xfconf-query >/dev/null 2>&1; then xfconf-query -c xfce4-desktop -lv | awk '/last-image/ {print \$1}' | while read -r prop; do xfconf-query -c xfce4-desktop -p \"\$prop\" -s '$wallpaper' || true; done; fi"
+    # Set the image plus its sibling image-style (5 = zoomed) and image-show on
+    # every backdrop; without a non-zero style Xfce keeps the image hidden.
+    ctf_try_user_shell "if command -v xfconf-query >/dev/null 2>&1; then xfconf-query -c xfce4-desktop -lv | awk '/last-image/ {print \$1}' | while read -r prop; do base=\"\${prop%/last-image}\"; xfconf-query -c xfce4-desktop -p \"\$prop\" -s '$wallpaper' || true; xfconf-query -c xfce4-desktop -p \"\$base/image-style\" -s 5 || true; xfconf-query -c xfce4-desktop -p \"\$base/image-show\" -s true || true; done; fi"
   fi
 
   local command
@@ -132,7 +134,9 @@ ctf_customize_gnome() {
   ctf_configure_gnome_terminal
 
   if [[ -n "$wallpaper" ]]; then
-    ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.gnome.desktop.background picture-uri 'file://$wallpaper'; gsettings set org.gnome.desktop.background picture-uri-dark 'file://$wallpaper' || true; fi"
+    # picture-options must be a scaling mode or GNOME ignores the URI and shows
+    # a blank/solid background, so set it alongside the light/dark image URIs.
+    ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.gnome.desktop.background picture-uri 'file://$wallpaper'; gsettings set org.gnome.desktop.background picture-uri-dark 'file://$wallpaper' || true; gsettings set org.gnome.desktop.background picture-options 'zoom' || true; fi"
   fi
 
   local command
@@ -210,7 +214,9 @@ ctf_customize_mate() {
   ctf_configure_mate_terminal
 
   if [[ -n "$wallpaper" ]]; then
-    ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.mate.background picture-filename '$wallpaper' || true; fi"
+    # draw-background + a scaling picture-options are needed or MATE leaves the
+    # image set but unrendered behind the solid desktop color.
+    ctf_try_user_shell "if command -v gsettings >/dev/null 2>&1; then gsettings set org.mate.background draw-background true || true; gsettings set org.mate.background picture-filename '$wallpaper' || true; gsettings set org.mate.background picture-options 'zoom' || true; fi"
   fi
 
   local command

@@ -36,3 +36,11 @@ DESKTOP="$BATS_TEST_DIRNAME/../lib/desktop.sh"
   [ -f "$BATS_TEST_DIRNAME/../assets/wallpapers/nightwire-noir.svg" ]
   grep -q "wallpapers/nightwire-noir.svg" "$BATS_TEST_DIRNAME/../assets/manifest.sha256"
 }
+
+@test "wallpaper is applied with a scaling mode so it actually renders" {
+  # The URI/filename alone is not enough; each desktop also needs a scaling mode
+  # (GNOME/MATE picture-options, Xfce image-style) or the image stays hidden.
+  grep -q "org.gnome.desktop.background picture-options" "$DESKTOP"
+  grep -q "org.mate.background picture-options" "$DESKTOP"
+  grep -q "image-style" "$DESKTOP"
+}
