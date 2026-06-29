@@ -112,7 +112,6 @@ The command helpers are for authorized CTF, lab, owned, or explicitly permitted 
 - Oh My Zsh is cloned at a pinned ref rather than executed via `curl | sh`; the Nerd Font download is version-pinned, integrity-checked, and optionally checksum-verified (`NERD_FONT_SHA256`). `--no-remote-installers` forbids the remaining `curl | sh` fallbacks (Starship, mise).
 - Managed config blocks (`.bashrc`, `.zshrc`, `.inputrc`, `.tmux.conf`) are content-hashed, so re-running the installer — or `nightwire reconfigure` — refreshes them in place only when they changed, without disturbing your own edits.
 - `nightwire cache prepare` builds an offline bundle (assets + git mirrors + Nerd Font); `./install.sh --cache-dir DIR --no-remote-installers` then installs fully airgapped.
-- CI lints, runs the bats suite, and executes a `--dry-run` smoke test so arg-parsing/detection regressions are caught automatically.
 - User config files (`.bashrc`, `.zshrc`, `.inputrc`, `.tmux.conf`) are backed up once with `.nightwire.bak` before managed blocks are added.
 - Desktop customization is best when run from inside the graphical session.
 
